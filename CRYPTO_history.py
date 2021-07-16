@@ -9,6 +9,7 @@ from dateutil import parser
 
 import CRYPTO_config
 
+# original code from (is slightly altered here):
 # https://medium.com/swlh/retrieving-full-historical-data-for-every-cryptocurrency-on-binance-bitmex-using-the-python-apis-27b47fd8137f
 
 binsizes = {"1m": 1, "5m": 5, "1h": 60, "1d": 1440}
