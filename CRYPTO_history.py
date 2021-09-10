@@ -9,8 +9,11 @@ from dateutil import parser
 
 import CRYPTO_config
 
-# original code from (is slightly altered here):
 # https://medium.com/swlh/retrieving-full-historical-data-for-every-cryptocurrency-on-binance-bitmex-using-the-python-apis-27b47fd8137f
+'''
+download current price data from Binance API
+then save to csv
+'''
 
 binsizes = {"1m": 1, "5m": 5, "1h": 60, "1d": 1440}
 batch_size = 750
@@ -73,6 +76,7 @@ def get_all_binance(symbol, kline_size, save = False):
         data_df = data_df.append(temp_df)
     else: data_df = data
     data_df.set_index('timestamp', inplace=True)
+    
     if save: data_df.to_csv('./csv/'+filename)
     print('All caught up..!')
     return data_df
