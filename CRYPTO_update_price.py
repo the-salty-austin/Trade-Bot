@@ -20,7 +20,7 @@ import CRYPTO_database as db
 #     print(i)
 
 cc = 'btcusd'  # crypto currency
-interval = '1m'
+interval = '1h'
 
 socket= f'wss://stream.binance.com:9443/ws/{cc}t@kline_{interval}'
 
@@ -67,16 +67,16 @@ def on_message(ws, message):
     low = float(candle['l'])
     vol = float(candle['v'])
 
-    if is_closed :
-        closes.append( close )
-        highs.append( high )
-        lows.append( low )
+    # if is_closed :
+    closes.append( close )
+    highs.append( high )
+    lows.append( low )
 
-        data = [close, high, low, vol, time]
+    data = [close, high, low, vol, time]
 
-        db.Save().save(data)
+    db.Save().save(data)
 
-        print(f'Time Now: { datetime.now().strftime("%H:%M:%S") } || Close:{close} High:{high} Low:{low} Vol:{vol}')
+    print(f'Time Now: { datetime.now().strftime("%H:%M:%S") } || Close:{close} High:{high} Low:{low} Vol:{vol}')
 
     # time.sleep(20)
 

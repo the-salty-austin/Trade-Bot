@@ -16,12 +16,12 @@ class Utility:
 
     @staticmethod
     def save_to_csv(data: pd.DataFrame, fname='test.csv') -> None:
-        data.to_csv('./csv_ta/'+fname)
+        data.to_csv('./csv_ta/'+fname, sep=',')
 
 class TA:
     # TA == Technical_Analysis
     @staticmethod
-    def moving_average(data: pd.DataFrame, window_size=5) -> list:
+    def moving_average(data: pd.DataFrame, window_size=5, update=False) -> list:
         i = 0
         moving_averages = [None]*(window_size-1)
         while i < len(data) - window_size + 1:
@@ -35,7 +35,7 @@ class TA:
         return moving_averages
 
     @staticmethod
-    def relative_strength_index(df_chg: pd.DataFrame, window_size=14) -> pd.DataFrame:
+    def relative_strength_index(df_chg: pd.DataFrame, window_size=14, update=False) -> pd.DataFrame:
         df = pd.DataFrame()
         df['chg'] = df_chg
         df['gain'] = df_chg.mask(df_chg < 0, 0.0)
@@ -52,7 +52,7 @@ class TA:
         return df[f'rsi_{window_size}']
 
     @staticmethod
-    def exponential_moving_average(df_close: pd.DataFrame, window_size=5, USE_OLD_ALPHA=True) -> list:
+    def exponential_moving_average(df_close: pd.DataFrame, window_size=5, USE_OLD_ALPHA=True, update=False) -> list:
         df_ma = TA.moving_average(df_close, window_size=window_size)
         ema = [None]*(window_size-1) + [ df_close[:window_size].mean() ]
 
@@ -69,7 +69,7 @@ class TA:
         return ema
 
     @staticmethod
-    def macd(ema12s: pd.DataFrame, ema26s: pd.DataFrame) -> tuple:
+    def macd(ema12s: pd.DataFrame, ema26s: pd.DataFrame, update=False) -> tuple:
         '''<return lists> dif, dem, hist'''
         length = len(ema12s)
         dif = [None]*(25)  # 26-1 QUICK
@@ -96,7 +96,7 @@ class TA:
         return dif, dem, hist
 
     @staticmethod
-    def stochastic_oscillator(df_close: pd.DataFrame, window_size=5) -> tuple:
+    def stochastic_oscillator(df_close: pd.DataFrame, window_size=5, update=False) -> tuple:
         '''<return tuple of LISTS>\n
         [1] K [2] D'''
         length = len(df_close)
@@ -142,7 +142,6 @@ def main():
     df = Utility.read_csv("./csv/BTCUSDT-1d-data.csv")
     df.drop(['open', 'close_time', 'ignore'], axis=1, inplace=True)
 
-
     df['price_diff'] = df['close'].diff()
 
     df['MA_05'] = TA.moving_average( df['close'] , window_size=5 )
@@ -164,7 +163,8 @@ def main():
     # print(df.tail(6))
     # print(df.columns)
 
-    Utility.save_to_csv(df, fname='TEST1.csv')
+    print(df['K%'])
+    Utility.save_to_csv(df, fname='TEST2.csv')
 
 if __name__ == '__main__':
     main()
